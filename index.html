@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareSync | খাজা বদরুদদোজা মডার্ন হাসপাতাল</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-light: #eff6ff;
+            --primary-gradient: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            --bg-main: #f1f5f9;
+            --surface: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --danger: #ef4444;
+            --success: #10b981;
+            --morning-accent: #f59e0b;
+            --evening-accent: #6366f1;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-dark); padding-bottom: 60px; line-height: 1.5; }
+
+        /* Emergency Hot Banner */
+        .emergency-banner {
+            background-color: var(--danger);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Hospital Hero Section */
+        .hospital-hero {
+            background: var(--primary-gradient);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hospital-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .hospital-hero h1 { font-size: 2.5rem; margin-bottom: 12px; font-weight: 800; letter-spacing: -0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .hospital-hero p { font-size: 1.15rem; opacity: 0.95; margin-bottom: 15px; font-weight: 300; }
+        .hospital-hero .contact-info {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 1px solid rgba(255,255,255,0.25);
+            box-shadow: var(--shadow-md);
+        }
+
+        .main-container { max-width: 1200px; margin: -30px auto 40px auto; padding: 0 20px; position: relative; z-index: 10; }
+
+        /* Premium Centralized Card Wrapper */
+        .main-board-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .section-title { text-align: center; margin-bottom: 30px; }
+        .section-title h2 { font-size: 1.8rem; color: #0f172a; font-weight: 700; }
+        .section-title p { color: #64748b; margin-top: 6px; font-size: 0.95rem; }
+        
+        /* Ultra Modern Menu Bar (Segmented Control Layout) */
+        .menu-bar-container {
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .days-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        @media (min-width: 768px) {
+            .days-nav-grid { grid-template-columns: repeat(7, 1fr); }
+        }
+
+        .day-nav-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 8px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .day-nav-btn .bn-day { font-size: 1.05rem; font-weight: 700; display: block; margin-bottom: 2px; }
+        .day-nav-btn .en-day { font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+        
+        .day-nav-btn:hover { background: rgba(37, 99, 235, 0.05); color: var(--primary); }
+        
+        /* Premium Active State styled like iOS Segmented Tabs */
+        .day-nav-btn.active {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .day-nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 4px; left: 25%; right: 25%; height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* Search Controls Grid */
+        .search-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        @media (min-width: 768px) {
+            .search-container { grid-template-columns: 2fr 1fr; }
+        }
+        .search-container input, .search-container select {
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.95rem;
+            outline: none;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+        .search-container input::placeholder { color: #94a3b8; }
+        .search-container input:focus, .search-container select:focus { 
+            border-color: #3b82f6; 
+            background-color: var(--surface);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Dedicated Redirection Button Style */
+        .dedicated-link-box { text-align: center; margin-bottom: 35px; }
+        .dedicated-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid #bfdbfe;
+            transition: all 0.2s;
+        }
+        .dedicated-btn:hover { background: var(--primary); color: white; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+        /* Schedule Panels Configuration */
+        .schedule-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media (min-width: 992px) { .schedule-grid { grid-template-columns: 1fr 1fr; } }
+
+        .shift-column {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+        .shift-column h3 {
+            font-size: 1.15rem;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1e293b;
+            font-weight: 700;
+        }
+        .indicator { width: 12px; height: 12px; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 4px rgba(0,0,0,0.05); }
+        .morning-indicator { background-color: var(--morning-accent); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); }
+        .evening-indicator { background-color: var(--evening-accent); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
+
+        .cards-list { display: flex; flex-direction: column; gap: 16px; }
+        
+        /* Doctor Cards Styling */
+        .doc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s;
+        }
+        .doc-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
+        .doc-name { font-size: 1.15rem; font-weight: 700; color: #0f172a; line-height: 1.3; }
+        .doc-specialty {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+            white-space: normal;
+            text-align: center;
+            max-width: 180px;
+        }
+        .doc-hospital { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: center; gap: 4px; }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+        .room-tag { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; color: var(--text-dark); font-weight: 600; }
+        .time-tag { color: var(--success); font-weight: 700; display: flex; align-items: center; gap: 4px; }
+        
+        .empty-message {
+            text-align: center;
+            padding: 45px 20px;
+            color: #94a3b8;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            background: #ffffff;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="emergency-banner">🚨 জরুরি নোটিশ: আমাদের জরুরি বিভাগ এবং অ্যাম্বুলেন্স সেবা ২৪ ঘণ্টা খোলা থাকে।</div>
+
+    <div class="hospital-hero">
+        <h1>খাজা বদরুদদোজা মডার্ন হাসপাতাল</h1>
+        <p>আজিজ ম্যানশন, সফিপুর, কালিয়াকৈর, গাজীপুর</p>
+        <div class="contact-info">📞 হটলাইন: ০১৭৭৬-৬০৬২৬২, ০১৬৮৭৬২৫৫৬৫</div>
+    </div>
+
+    <main class="main-container">
+        <div class="main-board-card">
+            
+            <div class="section-title">
+                <h2>সাপ্তাহিক লাইভ রোস্টার বোর্ড</h2>
+                <p>যেকোনো বারে ক্লিক করলে সাথে সাথে শুধুমাত্র সেই দিনের ডাক্তারদের তালিকা লোড হবে</p>
+            </div>
+
+            <div class="menu-bar-container">
+                <div class="days-nav-grid">
+                    <button class="day-nav-btn" id="btn-Saturday" onclick="switchDay('Saturday')"><span class="bn-day">শনি</span><span class="en-day">Sat</span></button>
+                    <button class="day-nav-btn" id="btn-Sunday" onclick="switchDay('Sunday')"><span class="bn-day">রবি</span><span class="en-day">Sun</span></button>
+                    <button class="day-nav-btn" id="btn-Monday" onclick="switchDay('Monday')"><span class="bn-day">সোম</span><span class="en-day">Mon</span></button>
+                    <button class="day-nav-btn active" id="btn-Tuesday" onclick="switchDay('Tuesday')"><span class="bn-day">মঙ্গল</span><span class="en-day">Tue</span></button>
+                    <button class="day-nav-btn" id="btn-Wednesday" onclick="switchDay('Wednesday')"><span class="bn-day">বুধ</span><span class="en-day">Wed</span></button>
+                    <button class="day-nav-btn" id="btn-Thursday" onclick="switchDay('Thursday')"><span class="bn-day">বৃহস্পতি</span><span class="en-day">Thu</span></button>
+                    <button class="day-nav-btn" id="btn-Friday" onclick="switchDay('Friday')"><span class="bn-day">শুক্র</span><span class="en-day">Fri</span></button>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" onkeyup="filterRoster()" placeholder="ডাক্তারের নাম বা মেডিকেল কলেজের নাম লিখে খুঁজুন...">
+                <select id="deptFilter" onchange="filterRoster()">
+                    <option value="">সব বিভাগ (All Specialties)</option>
+                    <option value="মেডিসিন">মেডিসিন ও ডায়াবেটিস</option>
+                    <option value="গাইনী">গাইনী ও প্রসূতি রোগ</option>
+                    <option value="অর্থোপেডিক">অর্থোপেডিক্স ও ট্রমা</option>
+                    <option value="শিশু">নবজাতক ও শিশুরোগ</option>
+                    <option value="বক্ষব্যাধি">বক্ষব্যাধি রোগ</option>
+                    <option value="চর্ম">চর্ম, যৌন ও এলার্জি</option>
+                    <option value="নাক, কান">নাক, কান, গলা (ENT)</option>
+                    <option value="চক্ষু">চক্ষু রোগ</option>
+                    <option value="ডেন্টাল">মুখ ও দন্ত সার্জারি</option>
+                    <option value="ফিজিওথেরাপি">ফিজিওথেরাপি</option>
+                    <option value="নিউট্রিশন">নিউট্রিশন ও ডায়েট</option>
+                    <option value="সার্জন">জেনারেল সার্জন</option>
+                    <option value="সনোলজিস্ট">সনোলজিস্ট</option>
+                </select>
+            </div>
+
+            <div class="dedicated-link-box">
+                <a href="tuesday.html" id="dedicatedPageLink" class="dedicated-btn">
+                    <span>↗ মঙ্গলবারের ডেডিকেটেড পেজটি আলাদাভাবে খুলুন</span>
+                </a>
+            </div>
+
+            <div class="schedule-grid">
+                <div class="shift-column">
+                    <h3><span class="indicator morning-indicator"></span> সকালের শিফট (Morning Shift)</h3>
+                    <div class="cards-list" id="morningList"></div>
+                </div>
+                <div class="shift-column">
+                    <h3><span class="indicator evening-indicator"></span> বিকেলের শিফট (Evening Shift)</h3>
+                    <div class="cards-list" id="eveningList"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentSelectedDay = "Tuesday";
+
+        function switchDay(dayName) {
+            currentSelectedDay = dayName;
+            
+            // Toggle active classes across tabs
+            document.querySelectorAll('.day-nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${dayName}`).classList.add('active');
+
+            // Update external standalone link tracker
+            const linkBtn = document.getElementById('dedicatedPageLink');
+            linkBtn.href = `${dayName.toLowerCase()}.html`;
+            
+            const dayBanglaMapping = {
+                'Saturday': 'শনিবারের', 'Sunday': 'রবিবারের', 'Monday': 'সোমবারের',
+                'Tuesday': 'মঙ্গলবারের', 'Wednesday': 'বুধবারের', 'Thursday': 'বৃহস্পতিবারের', 'Friday': 'শুক্রবারের'
+            };
+            linkBtn.innerHTML = `↗ ${dayBanglaMapping[dayName]} ডেডিকেটেড পেজটি আলাদাভাবে খুলুন`;
+
+            filterRoster();
+        }
+
+        function filterRoster() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            const deptQuery = document.getElementById('deptFilter').value.trim();
+
+            const morningContainer = document.getElementById('morningList');
+            const eveningContainer = document.getElementById('eveningList');
+
+            let rosterSource = [];
+            
+            // Safely pulling operational records from shared localStorage matrix
+            try {
+                const localData = localStorage.getItem('doctor_roster');
+                if (localData) {
+                    rosterSource = JSON.parse(localData);
+                }
+            } catch(e) { console.error("Error connecting to database matrix engine.", e); }
+
+            // Isolate items strict to selected tab menu day 
+            let records = rosterSource.filter(item => item.day === currentSelectedDay);
+
+            // Fuzzy string matching filter engine
+            if (searchQuery) {
+                records = records.filter(r => 
+                    r.name.toLowerCase().includes(searchQuery) || 
+                    r.hospital.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Categorical specialty taxonomy selector filter
+            if (deptQuery) {
+                records = records.filter(r => r.specialty.includes(deptQuery));
+            }
+
+            const morningDocs = records.filter(r => r.shift === 'Morning');
+            const eveningDocs = records.filter(r => r.shift === 'Evening');
+
+            morningContainer.innerHTML = morningDocs.length ? morningDocs.map(renderCard).join('') : `<div class="empty-message">इस দিনে সকালে কোনো ডাক্তারের চেম্বার পাওয়া যায়নি।</div>`;
+            eveningContainer.innerHTML = eveningDocs.length ? eveningDocs.map(renderCard).join('') : `<div class="empty-message">এই দিনে বিকেলে কোনো ডাক্তারের চেম্বার পাওয়া যায়নি।</div>`;
+        }
+
+        function renderCard(doc) {
+            return `
+                <div class="doc-card">
+                    <div class="card-header">
+                        <div class="doc-name">${doc.name}</div>
+                        <div class="doc-specialty">${doc.specialty}</div>
+                    </div>
+                    <div class="doc-hospital">🏥 উৎস: &nbsp;<strong>${doc.hospital}</strong></div>
+                    <div class="card-footer">
+                        <div>রুম: <span class="room-tag">${doc.roomNo || 'N/A'}</span></div>
+                        <div class="time-tag">🕒 ${doc.startTime} - ${doc.endTime}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize display configuration on launch
+        window.onload = () => {
+            filterRoster();
+        };
+    </script>
+</body>
+</html>

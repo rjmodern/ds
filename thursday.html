@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareSync | Thursday Specialists Directory</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-main: #f8fafc;
+            --surface: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --danger: #dc2626;
+            --morning-accent: #f59e0b;
+            --evening-accent: #4f46e5;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-dark); padding-bottom: 40px; }
+
+        .hospital-banner {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            text-align: center;
+            padding: 25px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .hospital-banner h1 { font-size: 1.8rem; margin-bottom: 5px; }
+        .hospital-banner p { font-size: 0.95rem; opacity: 0.9; }
+
+        header {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); text-decoration: none; }
+        .back-btn { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+        .back-btn:hover { color: var(--primary); }
+
+        .main-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        
+        .search-box {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .search-box h2 { font-size: 1.2rem; margin-bottom: 15px; font-weight: 600; }
+        
+        .search-group { display: flex; flex-direction: column; gap: 12px; }
+        @media (min-width: 768px) {
+            .search-group { flex-direction: row; }
+        }
+        
+        .search-group input, .search-group select {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+            outline: none;
+            background-color: white;
+        }
+        .search-group input { flex: 2; }
+        .search-group select { flex: 1; cursor: pointer; color: var(--text-dark); }
+        .search-group input:focus, .search-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+        
+        .search-group button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .search-group button:hover { background-color: var(--primary-hover); }
+
+        .day-indicator-bar {
+            background: #f1f5f9;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .schedule-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media (min-width: 992px) { .schedule-grid { grid-template-columns: 1fr 1fr; } }
+
+        .shift-column h3 {
+            font-size: 1.25rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .indicator { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .morning-indicator { background-color: var(--morning-accent); }
+        .evening-indicator { background-color: var(--evening-accent); }
+
+        .cards-list { display: flex; flex-direction: column; gap: 16px; }
+        .doc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+        .doc-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 10px; }
+        .doc-name { font-size: 1.1rem; font-weight: bold; color: var(--text-dark); }
+        .doc-specialty {
+            background: #eff6ff;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #bfdbfe;
+            text-transform: uppercase;
+            text-align: right;
+            white-space: nowrap;
+        }
+        .doc-hospital { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .footer-item strong { color: var(--text-dark); }
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            border: 2px dashed var(--border);
+            background: #f1f5f9;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hospital-banner">
+        <h1>খাজা বদরুদদোজা মডার্ন হাসপাতাল</h1>
+        <p>আজিজ ম্যানশন, সফিপুর, কালিয়াকৈর, গাজীপুর</p>
+        <p style="margin-top: 5px; font-weight: bold; font-size: 0.85rem;">📞 ০১৭৭৬-৬০৬২৬২, ০১৬৮৭৬২৫৫৬৫</p>
+    </div>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">🩺 CareSync</a>
+            <a href="index.html" class="back-btn">← মূল বোর্ডে ফিরে যান</a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="search-box">
+            <h2>বৃহস্পতিবার চেম্বার করবেন এমন বিশেষজ্ঞ ডাক্তার খুঁজুন</h2>
+            <div class="search-group">
+                <input type="text" id="searchInput" placeholder="ডাক্তারের নাম বা মেডিকেল কলেজের নাম লিখুন...">
+                
+                <select id="deptFilter">
+                    <option value="">সব বিভাগ (All Specialties)</option>
+                    <option value="মেডিসিন">মেডিসিন, হৃদরোগ ও ডায়াবেটিস (Medicine)</option>
+                    <option value="গাইনী">গাইনী ও প্রসূতি রোগ (Gynecology)</option>
+                    <option value="অর্থোপেডিক">অর্থোপেডিক্স ও ট্রমা (Orthopedics)</option>
+                    <option value="শিশু">নবজাতক ও শিশুরোগ (Pediatrics)</option>
+                    <option value="বক্ষব্যাধি">বক্ষব্যাধি রোগ বিশেষজ্ঞ (Pulmonology)</option>
+                    <option value="চর্ম">চর্ম, যৌন ও এলার্জি (Dermatology)</option>
+                    <option value="নাক, কান">নাক, কান, গলা (ENT)</option>
+                    <option value="চক্ষু">চক্ষু রোগ বিশেষজ্ঞ (Ophthalmology)</option>
+                    <option value="ডেন্টাল">মুখ ও ডেন্টাল সার্জন (Dental)</option>
+                    <option value="ফিজিওথেরাপি">ফিজিওথেরাপি (Physiotherapy)</option>
+                    <option value="নিউট্রিশন">নিউট্রিশন ও ডায়েট (Nutrition)</option>
+                    <option value="সার্জন">জেনারেল ও ল্যাপারোস্কপিক সার্জন (Surgery)</option>
+                    <option value="গ্যাস্ট্রো">গ্যাস্ট্রোলিভার ও পরিপাকতন্ত্র (Gastroenterology)</option>
+                    <option value="সনোলজিস্ট">সনোলজিস্ট (Sonologist)</option>
+                </select>
+
+                <button id="searchBtn">অনুসন্ধান</button>
+            </div>
+        </div>
+
+        <div class="day-indicator-bar">
+            <span>📅 বৃহস্পতিবার (Thursday) এর রোস্টার শিট</span>
+            <span id="totalCounter" style="font-size: 0.85rem; font-weight: normal; color: var(--text-muted);">মোট ডাক্তার: ২৪ জন</span>
+        </div>
+
+        <div class="schedule-grid">
+            <div class="shift-column">
+                <h3><span class="indicator morning-indicator"></span> সকালের শিফট (Morning)</h3>
+                <div class="cards-list" id="morningContainer"></div>
+            </div>
+
+            <div class="shift-column">
+                <h3><span class="indicator evening-indicator"></span> বিকেলের শিফট (Evening)</h3>
+                <div class="cards-list" id="eveningContainer"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // বৃহস্পতিবারের সব ডাটা অবজেক্ট অ্যারে
+        const thursdayRoster = [
+            // সকালের শিফট (৯ জন)
+            { id: "th-m1", name: "অধ্যাপক ডা. মোঃ আব্দুর রহিম", specialty: "মেডিসিন বিশেষজ্ঞ", hospital: "পিজি হাসপাতাল", roomNo: "116", shift: "Morning", startTime: "10:00 AM", endTime: "03:00 PM" },
+            { id: "th-m2", name: "ডা. মাহমুদা খাতুন", specialty: "গাইনী বিশেষজ্ঞ ও সার্জন", hospital: "পিজি হাসপাতাল", roomNo: "119", shift: "Morning", startTime: "10:00 AM", endTime: "08:00 PM" },
+            { id: "th-m3", name: "ডা. সুরজিৎ সাহা", specialty: "হাড় জোড়া, হাড় ভাঙ্গা, বাত ব্যথা রোগ বিশেষজ্ঞ ও সার্জন", hospital: "শহীদ সোহরাওয়ার্দী মেডিকেল কলেজ হাসপাতাল", roomNo: "118", shift: "Morning", startTime: "10:00 AM", endTime: "02:00 PM" },
+            { id: "th-m4", name: "ডা. ফারজানা আক্তার দিতি", specialty: "শিশুরোগ বিশেষজ্ঞ", hospital: "শহীদ তাজউদ্দিন আহমেদ মেডিকেল কলেজ হাসপাতাল", roomNo: "2", shift: "Morning", startTime: "10:00 AM", endTime: "08:00 PM" },
+            { id: "th-m5", name: "ডাঃ মোঃ সুজন মাহমুদ", specialty: "চক্ষু ও মাথা ব্যথা রোগে অভিজ্ঞ", hospital: "কেবিএমএইচ (KBMH)", roomNo: "N/A", shift: "Morning", startTime: "09:00 AM", endTime: "09:00 PM" },
+            { id: "th-m6", name: "পুষ্টিবিদ সায়মা আক্তার লিজা", specialty: "নিউট্রিশন ও ডায়েট কনসালটেন্ট", hospital: "ইবনে সিনা মেডিকেল কলেজ এন্ড হসপিটাল", roomNo: "1", shift: "Morning", startTime: "10:00 AM", endTime: "08:00 PM" },
+            { id: "th-m7", name: "ডা. রাবেয়া জামান নাদিয়া", specialty: "সনোলজিস্ট ও জেনারেল ফিজিশিয়ান", hospital: "কেবিএমএইচ (KBMH)", roomNo: "103", shift: "Morning", startTime: "10:00 AM", endTime: "08:00 PM" },
+            { id: "th-m8", name: "KBMH Others", specialty: "Others Clinic Support", hospital: "KBMH", roomNo: "102", shift: "Morning", startTime: "04:00 AM", endTime: "11:59 AM" },
+            { id: "th-m9", name: "ডা. হাসনাইন সরকার (পি.টি.)", specialty: "ফিজিওথেরাপি কনসালটেন্ট", hospital: "খাজা বদরুদদোজা মডার্ন হাসপাতাল", roomNo: "N/A", shift: "Morning", startTime: "10:00 AM", endTime: "06:00 PM" },
+
+            // বিকেলের শিফট (১৫ জন)
+            { id: "th-e1", name: "ডা. হুমায়ূন কবির কল্লোল", specialty: "জেনারেল, ল্যাপারোস্কপিক সার্জন ও ইউরোলজিস্ট", hospital: "ঢাকা মেডিকেল কলেজ ও হাসপাতাল", roomNo: "144", shift: "Evening", startTime: "06:00 PM", endTime: "09:00 PM" },
+            { id: "th-e2", name: "ডা. sabbr আহমেদ ভূঁইয়া", specialty: "নবজাতক, শিশু ও কিশোর বিশেষজ্ঞ", hospital: "শহীদ তাজউদ্দিন আহমেদ মেডিকেল কলেজ হাসপাতাল", roomNo: "158", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e3", name: "সহকারী অধ্যাপক ডা. সজল রায়", specialty: "নাক, কান, গলা রোগ বিশেষজ্ঞ ও হেড নেক সার্জন", hospital: "তায়রুন্নেসা মেমোরিয়াল মেডিকেল কলেজ এন্ড হাসপাতাল", roomNo: "147", shift: "Evening", startTime: "05:00 PM", endTime: "08:00 PM" },
+            { id: "th-e4", name: "ডা. মাহমুদুর রহমান", specialty: "অর্থোপেডিক বিশেষজ্ঞ ও সার্জন", hospital: "পঙ্গু হাসপাতাল", roomNo: "148", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e5", name: "সহকারী অধ্যাপক ডা. তাহমিদ মাহবুব", specialty: "গ্যাস্ট্রো-লিভার ও মেডিসিন বিশেষজ্ঞ", hospital: "শেখ রাসেল জাতীয় গ্যাস্ট্রোলিভার ইনস্টিটিউট ও হাসপাতাল", roomNo: "2", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e6", name: "ডা. লুবনা খানম", specialty: "স্ত্রী ও প্রসূতি রোগ বিশেষজ্ঞ ও সার্জন", hospital: "কালিগঞ্জ উপজেলা স্বাস্থ্য কমপ্লেক্স", roomNo: "119", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e7", name: "সহকারী অধ্যাপক ডাঃ মোঃ কায়সারুল ইসলাম", specialty: "মেডিসিন, ডায়াবেটিস ও হৃদরোগ বিশেষজ্ঞ", hospital: "শহীদ তাজউদ্দিন আহমেদ মেডিকেল কলেজ হাসপাতাল", roomNo: "117", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e8", name: "ডা. মোঃ আমান উল্লাহ কবির (মিলটন)", specialty: "হাড় জোড়া, বাত ব্যথা, মেরুদন্ড ও আঘাত জনিত রোগ বিশেষজ্ঞ", hospital: "পিজি হাসপাতাল", roomNo: "118", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e9", name: "ডা. মোঃ রাকিব-উল-হাসান", specialty: "বাত-ব্যথা, ডায়াবেটিস, মেডিসিন ও অটো ইমিউনো রোগ বিশেষজ্ঞ", hospital: "বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয় (BSMMU)", roomNo: "146", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e10", name: "ডা. মোঃ আসিফুর রহমান আসিফ", specialty: "মেডিসিন, হৃদরোগ, বক্ষব্যাধি, কিডনি ও লিভার রোগ অভিজ্ঞ", hospital: "ঢাকা মেডিকেল কলেজ হাসপাতাল", roomNo: "145", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" },
+            { id: "th-e11", name: "ডা. সুলтан মাহমুদ", specialty: "মেডিসিন, নিউরো মেডিসিন ও ডায়াবেটিস বিশেষজ্ঞ", hospital: "ঢাকা মেডিকেল কলেজ ও হাসপাতাল", roomNo: "115", shift: "Evening", startTime: "05:00 PM", endTime: "09:00 PM" },
+            { id: "th-e12", name: "ডা. মোঃ রাকিবুল হাসান", specialty: "চর্ম, যৌন ও এলার্জি রোগ বিশেষজ্ঞ", hospital: "বঙ্গবন্ধু শেখ মুজিব মেডিকেল বিশ্ববিদ্যালয়", roomNo: "121", shift: "Evening", startTime: "04:00 PM", endTime: "07:00 PM" },
+            { id: "th-e13", name: "ডা. এম. আরফান মাহমুদ", specialty: "মুখ ও দন্ত রোগ বিশেষজ্ঞ ও সার্জন", hospital: "শহীদ সোহরাওয়ার্দী মেডিকেল কলেজ হাসপাতাল", roomNo: "N/A", shift: "Evening", startTime: "01:00 PM", endTime: "04:00 PM" },
+            { id: "th-e14", name: "ডা. খন্দকার আবুল হোসাইন", specialty: "ফিজিওথেরাপি বিশেষজ্ঞ", hospital: "পঙ্গু হাসপাতাল", roomNo: "N/A", shift: "Evening", startTime: "04:30 PM", endTime: "08:30 PM" },
+            { id: "th-e15", name: "ডা. মোঃ হাসনাত আনোয়ার", specialty: "নাক, কান ও গলা রোগ বিশেষজ্ঞ ও সার্জন", hospital: "শহীদ সোহরাওয়ার্দী মেডিকেল কলেজ ও হাসপাতাল", roomNo: "120", shift: "Evening", startTime: "04:00 PM", endTime: "08:00 PM" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderData();
+            
+            // ইভেন্ট লিসেনার যুক্ত করা
+            document.getElementById('searchBtn').addEventListener('click', renderData);
+            document.getElementById('deptFilter').addEventListener('change', renderData);
+            document.getElementById('searchInput').addEventListener('keyup', (e) => { if(e.key === 'Enter') renderData(); });
+        });
+
+        function renderData() {
+            const textQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            const selectedDept = document.getElementById('deptFilter').value.trim();
+            
+            const morningBox = document.getElementById('morningContainer');
+            const eveningBox = document.getElementById('eveningContainer');
+            const totalCounter = document.getElementById('totalCounter');
+
+            let matchedRecords = thursdayRoster;
+            
+            // ১. টেক্সট ফিল্টার (নাম বা হাসপাতাল)
+            if (textQuery) {
+                matchedRecords = matchedRecords.filter(item => 
+                    item.name.toLowerCase().includes(textQuery) ||
+                    item.hospital.toLowerCase().includes(textQuery)
+                );
+            }
+
+            // ২. বিভাগ ভিত্তিক ড্রপডাউন ফিল্টার
+            if (selectedDept) {
+                matchedRecords = matchedRecords.filter(item => 
+                    item.specialty.toLowerCase().includes(selectedDept.toLowerCase())
+                );
+            }
+
+            // লাইভ কাউন্টার আপডেট
+            totalCounter.textContent = `মোট ফলাফল: ${matchedRecords.length} জন`;
+
+            const morningDocs = matchedRecords.filter(d => d.shift === 'Morning');
+            const eveningDocs = matchedRecords.filter(d => d.shift === 'Evening');
+
+            morningBox.innerHTML = morningDocs.length ? morningDocs.map(createCardHtml).join('') : `<div class="empty-message">এই বিভাগে সকালে কোনো ডাক্তার পাওয়া যায়নি।</div>`;
+            eveningBox.innerHTML = eveningDocs.length ? eveningDocs.map(createCardHtml).join('') : `<div class="empty-message">এই বিভাগে বিকেলে কোনো ডাক্তার পাওয়া যায়নি।</div>`;
+        }
+
+        function createCardHtml(doc) {
+            return `
+                <div class="doc-card">
+                    <div class="card-header">
+                        <div class="doc-name">${doc.name}</div>
+                        <div class="doc-specialty">${doc.specialty}</div>
+                    </div>
+                    <div class="doc-hospital">🏥 চেম্বার সোর্স: <strong>${doc.hospital}</strong></div>
+                    <div class="card-footer">
+                        <div class="footer-item">রুম নং: <strong style="color:var(--primary); font-size:1rem;">${doc.roomNo}</strong></div>
+                        <div class="footer-item" style="color:#10b981; font-weight:600;">🕒 ${doc.startTime} - ${doc.endTime}</div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
